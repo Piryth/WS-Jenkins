@@ -3,7 +3,6 @@ import graphene
 from flask import Flask, request
 from pymongo import MongoClient
 
-
 class Product(graphene.ObjectType):
     id = graphene.ID()
     title = graphene.String()
