@@ -16,7 +16,7 @@ class Query(graphene.ObjectType):
     titles = graphene.List(graphene.String)
 
     def resolve_products(self, info):
-        client = MongoClient("mongodb://localhost:27017/")
+        client = MongoClient("mongodb+srv://admin:admin@cluster0.k8uei0j.mongodb.net/WS")
         db = client.WSCA
         products = db.Products
         res = list(products.find())
@@ -24,7 +24,7 @@ class Query(graphene.ObjectType):
         return [Product(product.get('id'), product.get('title'), product.get('cost')) for product in res]
 
     def resolve_titles(self, info):
-        client = MongoClient("mongodb://localhost:27017/")
+        client = MongoClient("mongodb+srv://admin:admin@cluster0.k8uei0j.mongodb.net/WS")
         db = client.WSCA
         products = db.Products
         res = list(products.find())

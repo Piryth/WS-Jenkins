@@ -14,7 +14,7 @@ secret_key = "loremipsumdolorsitamet"
 
 @app.route("/products", methods=["GET"])
 def get_all_products():
-    client = MongoClient("mongodb://localhost:27017/")
+    client = MongoClient("mongodb+srv://admin:admin@cluster0.k8uei0j.mongodb.net/WS")
     db = client.WSCA
     products = db.Products
     res = dumps(products.find())
@@ -24,7 +24,7 @@ def get_all_products():
 
 @app.route("/products/<title>", methods=["GET"])
 def get_product_by_title(title):
-    client = MongoClient("mongodb://localhost:27017")
+    client = MongoClient("mongodb+srv://admin:admin@cluster0.k8uei0j.mongodb.net/WS")
     products = client.WSCA.Products
 
     res = dumps(products.find_one({"title": title}))
@@ -37,7 +37,7 @@ def get_product_by_title(title):
 @app.route("/products", methods=["POST"])
 def insert_product():
     # Init client
-    client = MongoClient("mongodb://localhost:27017")
+    client = MongoClient("mongodb+srv://admin:admin@cluster0.k8uei0j.mongodb.net/WS")
     product = client.WSCA.Products
 
     # Verifying content type
@@ -72,7 +72,7 @@ def insert_product():
 
 @app.route("/products/<title>", methods=["DELETE"])
 def delete_product(title):
-    client = MongoClient("mongodb://localhost:27017")
+    client = MongoClient("mongodb+srv://admin:admin@cluster0.k8uei0j.mongodb.net/WS")
     product = client.WSCA.Products
 
     secret = request.args.get('secret')
