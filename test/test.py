@@ -90,5 +90,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.text is not None)
 
+
 if __name__ == '__main__':
     tests = unittest.main()
+
+
