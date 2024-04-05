@@ -91,4 +91,4 @@ class MyTestCase(unittest.TestCase):
         self.assertTrue(response.text is not None)
 
 if __name__ == '__main__':
-    unittest.main()
+    tests = unittest.main()
