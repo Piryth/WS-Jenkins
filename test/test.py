@@ -14,6 +14,16 @@ class MyTestCase(unittest.TestCase):
         data = json.loads(res.content)
         print(data)
 
+        def test_titles_insert(self):
+            data = {
+                "id": "1000",
+                "title": "food",
+                "cost": 100
+            }
+            res = requests.post("http://localhost:5000/products", data)
+            data = json.loads(res.content)
+            print(data)
+
 
 if __name__ == '__main__':
     unittest.main()
