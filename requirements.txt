@@ -4,3 +4,4 @@ Flask-RESTful==0.3.10
 graphene==3.3
 pymongo==4.6.3
 requests
+pymongo[srv]
