@@ -100,9 +100,10 @@ def get_titles():
         return "Server internal error on GraphQL server", status.HTTP_500_INTERNAL_SERVER_ERROR
 
     return json.loads(res.content), status.HTTP_200_OK
+
+
 @app.route('/', methods=['GET'])
 def get_specification():
-
     try:
         with open('documentation.json', 'r') as file:
             specification = json.loads(file.read())
@@ -111,5 +112,6 @@ def get_specification():
 
     return {"specification": specification}
 
+
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=False)

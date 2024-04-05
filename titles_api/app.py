@@ -1,12 +1,15 @@
 from json import loads
+
 import graphene
 from flask import Flask, request
 from pymongo import MongoClient
+
 
 class Product(graphene.ObjectType):
     id = graphene.ID()
     title = graphene.String()
     cost = graphene.String()
+
 
 class Query(graphene.ObjectType):
     products = graphene.List(Product)
@@ -46,4 +49,4 @@ def graphql_query():
 
 
 if __name__ == '__main__':
-    app.run(port=5050, debug=False)
+    app.run(host="0.0.0.0", port=5050, debug=False)
