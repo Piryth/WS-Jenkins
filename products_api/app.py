@@ -3,7 +3,6 @@ import json
 import requests
 from bson.json_util import dumps
 from flask import Flask, request
-from flask_api import status
 from flask_restful import Api
 from pymongo import MongoClient
 
@@ -31,7 +30,7 @@ def get_product_by_title(title):
     res = dumps(products.find_one({"title": title}))
 
     if res == "null":
-        return "No product corresponding to title " + title, status.HTTP_200_OK
+        return "No product corresponding to title " + title, 200
     return json.loads(res)
 
 
@@ -43,12 +42,12 @@ def insert_product():
 
     # Verifying content type
     if request.headers.get('Content-Type') != 'application/json':
-        return "Content-Type not supported", status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
+        return "Content-Type not supported", 415
 
     secret = request.args.get('secret')
     print('secret is ', secret)
     if secret_key != secret:
-        return "Unauthorized : the secret is invalid", status.HTTP_403_FORBIDDEN
+        return "Unauthorized : the secret is invalid", 403
 
     record = json.loads(request.data)
 
@@ -58,14 +57,14 @@ def insert_product():
     # It is okay if the price is not specified.
     cost = record.get('cost', 'undefined')
     if id == "" or title == "":
-        return "Error : incorrect request", status.HTTP_400_BAD_REQUEST
+        return "Error : incorrect request", 400
 
     # Duplicate on id check
     res = product.find_one({"id": id})
 
     if res:
         print("conflit")
-        return "Conflict : a product with the specified id exists", status.HTTP_409_CONFLICT
+        return "Conflict : a product with the specified id exists", 409
 
     product.insert_one({'id': id, 'title': title, 'cost': cost})
     return "Product inserted"
@@ -79,7 +78,7 @@ def delete_product(title):
     secret = request.args.get('secret')
     print('secret is ', secret)
     if secret_key != secret:
-        return "Unauthorized : the secret is invalid", status.HTTP_403_FORBIDDEN
+        return "Unauthorized : the secret is invalid", 403
 
     product.delete_one({"title": title})
 
@@ -97,9 +96,9 @@ def get_titles():
 
     res = requests.post("http://localhost:5050/graphql", dumps(body))
     if res.status_code != 200:
-        return "Server internal error on GraphQL server", status.HTTP_500_INTERNAL_SERVER_ERROR
+        return "Server internal error on GraphQL server", 500
 
-    return json.loads(res.content), status.HTTP_200_OK
+    return json.loads(res.content), 200
 
 
 @app.route('/', methods=['GET'])
@@ -108,7 +107,7 @@ def get_specification():
         with open('documentation.json', 'r') as file:
             specification = json.loads(file.read())
     except FileNotFoundError:
-        return "Error when reading specification", status.HTTP_500_INTERNAL_SERVER_ERROR
+        return "Error when reading specification", 500
 
     return {"specification": specification}
 
