@@ -1,20 +1,25 @@
 import json
+import os
 
 import requests
 from bson.json_util import dumps
+from dotenv import load_dotenv
 from flask import Flask, request
 from flask_restful import Api
 from pymongo import MongoClient
 
 app = Flask(__name__)
 api = Api(app)
+load_dotenv()
 
 secret_key = "loremipsumdolorsitamet"
+database = os.getenv("MONGO_TESTING_DATABASE")
+titles = os.getenv("TITLES_API_URL")
 
 
 @app.route("/products", methods=["GET"])
 def get_all_products():
-    client = MongoClient("mongodb+srv://admin:admin@cluster0.k8uei0j.mongodb.net/WS")
+    client = MongoClient(database)
     db = client.WSCA
     products = db.Products
     res = dumps(products.find())
@@ -24,7 +29,7 @@ def get_all_products():
 
 @app.route("/products/<title>", methods=["GET"])
 def get_product_by_title(title):
-    client = MongoClient("mongodb+srv://admin:admin@cluster0.k8uei0j.mongodb.net/WS")
+    client = MongoClient(database)
     products = client.WSCA.Products
 
     res = dumps(products.find_one({"title": title}))
@@ -37,7 +42,7 @@ def get_product_by_title(title):
 @app.route("/products", methods=["POST"])
 def insert_product():
     # Init client
-    client = MongoClient("mongodb+srv://admin:admin@cluster0.k8uei0j.mongodb.net/WS")
+    client = MongoClient(database)
     product = client.WSCA.Products
 
     # Verifying content type
@@ -72,7 +77,7 @@ def insert_product():
 
 @app.route("/products/<title>", methods=["DELETE"])
 def delete_product(title):
-    client = MongoClient("mongodb+srv://admin:admin@cluster0.k8uei0j.mongodb.net/WS")
+    client = MongoClient(database)
     product = client.WSCA.Products
 
     secret = request.args.get('secret')
@@ -94,7 +99,7 @@ def get_titles():
     """
     body = {"query": ql_query}
 
-    res = requests.post("http://localhost:5050/graphql", dumps(body))
+    res = requests.post(titles + "/graphql", dumps(body))
     if res.status_code != 200:
         return "Server internal error on GraphQL server", 500
 

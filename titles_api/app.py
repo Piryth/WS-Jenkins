@@ -1,9 +1,15 @@
+import os
 from json import loads
 
 import graphene
 from flask import Flask, request
 from pymongo import MongoClient
+from dotenv import load_dotenv
 
+
+load_dotenv()
+
+database = os.getenv("MONGO_TESTING_DATABASE")
 
 class Product(graphene.ObjectType):
     id = graphene.ID()
@@ -16,7 +22,7 @@ class Query(graphene.ObjectType):
     titles = graphene.List(graphene.String)
 
     def resolve_products(self, info):
-        client = MongoClient("mongodb+srv://admin:admin@cluster0.k8uei0j.mongodb.net/WS")
+        client = MongoClient(database)
         db = client.WSCA
         products = db.Products
         res = list(products.find())
@@ -24,7 +30,7 @@ class Query(graphene.ObjectType):
         return [Product(product.get('id'), product.get('title'), product.get('cost')) for product in res]
 
     def resolve_titles(self, info):
-        client = MongoClient("mongodb+srv://admin:admin@cluster0.k8uei0j.mongodb.net/WS")
+        client = MongoClient(database)
         db = client.WSCA
         products = db.Products
         res = list(products.find())
